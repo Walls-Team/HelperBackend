@@ -1,21 +1,23 @@
-import { HttpStatus} from '@nestjs/common';
-/* 
-    Response Format 
-    {
-        success: boolean,
-        message: string,
-        results: any,
-        pagination: {
-            currentPage: number,
-            totalPages: number,
-            totalItems: number,
-            itemsPerPage: number
-        }
-    }
-*/
+import { HttpStatus } from '@nestjs/common';
 
+
+/**
+ * Represents the response format for API responses.
+ */
+
+const ErrorStatus = [400, 401, 403, 404, 405, 500, 501, 502, 503]
+
+/**
+ * Generates a global API response.
+ * @param res - The response object.
+ * @param data - The data to be included in the response.
+ * @param message - The response message (default: 'Response Success').
+ * @param statusCode - The HTTP status code (default: HttpStatus.OK).
+ * @param pagination - The pagination information (default: empty object).
+ * @returns The API response.
+ */
 export function globalResponseApi(
-  res,
+  res: any,
   data: any,
   message: string = 'Response Success',
   statusCode: HttpStatus = HttpStatus.OK,
@@ -26,14 +28,19 @@ export function globalResponseApi(
     itemsPerPage: 0,
   },
 ): any {
-   return  res.status(statusCode).json({
-        statusCode,
-        body: {
-          success: true,
-          message: message,
-          results: data,
-          pagination: pagination,
-        },
-    }
-    );
+  if ( ErrorStatus.includes(statusCode) ) {
+    return res.status(statusCode).json({
+      statusCode,
+      error: message,
+      results: data,
+      pagination: pagination,
+    });
+  } else {
+    return res.status(statusCode).json({
+      statusCode,
+      message: message,
+      results: data,
+      pagination: pagination,
+    });
+  }
 }

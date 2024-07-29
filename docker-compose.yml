@@ -1,19 +1,29 @@
 version: '3'
 services:
-  app:
-    container_name: app
-    build: .
-    ports:
-      - "3000:3000"
-    depends_on:
-      - helper-nsql
+  # app:
+  #   container_name: app
+  #   build: .
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - db
+    
+  # db:
+  #   container_name: db
+  #   image: postgres:latest
+  #   ports:
+  #     - "3033:5432"
+  #   environment:
+  #     POSTGRES_DB: helpers
+  #     POSTGRES_USER: admin_helper
+  #     POSTGRES_PASSWORD: zRGNqJ4tQq#;,k{Uq3hI
 
   helper-nsql:
     container_name : helper-nsql
     image: mongo:latest
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=
-      - MONGO_INITDB_ROOT_PASSWORD=
+      - MONGO_INITDB_ROOT_USERNAME=larm
+      - MONGO_INITDB_ROOT_PASSWORD=lunaygati45
     volumes:
       - helper-data:/data/db
     ports:
