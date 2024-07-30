@@ -36,7 +36,12 @@ export class AuthService {
 
     const { id } = user;
 
-    return await this.generateTokens({ sub:id });
+    let tokens = await this.generateTokens({ sub:id })
+
+    return  {
+      tokens,
+      id
+    };
   }
 
   async refresh(authRefreshDto: AuthRefreshDto) {

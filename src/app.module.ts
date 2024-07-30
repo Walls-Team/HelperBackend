@@ -14,6 +14,9 @@ import { AreaModule } from './modules/area/area.module';
 import { JobModule } from './modules/job/job.module';
 import { SpecialtieModule } from './modules/specialties/specialties.module';
 import { UsersModule } from './modules/users/users.module';
+import { AccountModule } from './modules/account/account.module';
+import { ClientModule } from './modules/client/client.module';
+import { HelperModule } from './modules/helper/helper.module';
 
 @Module({
   imports: [
@@ -43,6 +46,9 @@ import { UsersModule } from './modules/users/users.module';
     AreaModule,
     JobModule,
     SpecialtieModule,
+    AccountModule,
+    ClientModule,
+    HelperModule,
   ],
   controllers: [],
   providers: [

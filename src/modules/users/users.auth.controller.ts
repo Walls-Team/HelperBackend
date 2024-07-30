@@ -14,13 +14,19 @@ export class AuthController {
   async login(@Res() res, @Body() authLoginDto: AuthLoginDto) {
     try {
       let response = await this.authService.login(authLoginDto);
-      res.cookie('hct', response.access_token, {
+      res.cookie('hct', response.tokens.access_token, {
         httpOnly: true,
         secure: false,
         sameSite: 'lax',
       });
 
-      res.cookie('rct', response.refresh_token, {
+      res.cookie('rct', response.tokens.refresh_token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax',
+      });
+
+      res.cookie('scu', response.id, {
         httpOnly: true,
         secure: false,
         sameSite: 'lax',
@@ -44,9 +50,10 @@ export class AuthController {
 
   @Get('logout')
   @UseGuards(AuthGuard)
-  async logout(@Res() res) {
+  async logout(@Res({passthrough : true}) res) {
     res.clearCookie('hct');
     res.clearCookie('rct');
+    res.clearCookie('scu');
     return { message: 'Sesión cerrada' };
   }
 }
