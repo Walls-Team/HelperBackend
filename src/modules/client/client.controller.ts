@@ -8,7 +8,8 @@ import {
   Delete,
   Req,
   Res,
-  UseGuards
+  UseGuards,
+  Put
 } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { CreateClientDto } from './dto/create-client.dto';
@@ -87,7 +88,7 @@ export class ClientController {
     
   }
 
-  @Patch(':id')
+  @Put(':id')
   @UseGuards(AuthGuard)
   async update(
     @Res() res: Response,

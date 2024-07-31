@@ -1,26 +1,61 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateHelperDto } from './dto/create-helper.dto';
 import { UpdateHelperDto } from './dto/update-helper.dto';
+import {
+  Helper,
+  HelperDocument,
+} from 'src/modules/helper/schemas/helper.schema';
 
 @Injectable()
 export class HelperService {
-  create(createHelperDto: CreateHelperDto) {
-    return 'This action adds a new helper';
+  constructor(
+    @InjectModel(Helper.name, 'HelperMongo')
+    private helperModel: Model<HelperDocument>,
+  ) {}
+
+  async create(createHelperDto: CreateHelperDto): Promise<HelperDocument> {
+    const createdHelper = new this.helperModel(createHelperDto);
+    let newHelper = await createdHelper.save();
+    const helper = await this.helperModel
+      .findOne({ _id: newHelper._id })
+      .select(['bio', 'title', 'points', 'profileComplete'])
+      .populate('areas', '_id name')
+      .populate('jobs', '_id name')
+      .populate('specials', '_id name');
+    return helper;
   }
 
-  findAll() {
-    return `This action returns all helper`;
+  async findMe(id: string): Promise<HelperDocument> {
+    const helper = await this.helperModel
+      .findOne({ _id: id })
+      .select(['bio', 'title', 'points', 'profileComplete'])
+      .populate('areas', '_id name')
+      .populate('jobs', '_id name')
+      .populate('specials', '_id name');
+    return helper;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} helper`;
+  async update(
+    id: string,
+    updateHelperDto: UpdateHelperDto,
+  ): Promise<HelperDocument> {
+    const updatedHelper = await this.helperModel
+      .findOneAndUpdate({ _id: id }, updateHelperDto, { new: true })
+      .select(['bio', 'title', 'points', 'profileComplete'])
+      .populate('areas', '_id name')
+      .populate('jobs', '_id name')
+      .populate('specials', '_id name');
+    return updatedHelper;
   }
 
-  update(id: number, updateHelperDto: UpdateHelperDto) {
-    return `This action updates a #${id} helper`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} helper`;
+  async remove(id: string): Promise<boolean> {
+    const deletedHelper = await this.helperModel.findOneAndDelete({ _id: id });
+    if (deletedHelper) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

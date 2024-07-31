@@ -42,7 +42,7 @@ export class AccountService {
       })
       .populate({
         path: 'helper',
-        select: '_id',
+        select: '_id title',
       })
       .exec();
   }

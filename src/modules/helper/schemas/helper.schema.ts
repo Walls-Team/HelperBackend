@@ -8,7 +8,7 @@ export class Helper extends Document {
     bio?: string;
 
     @Prop({ type: String })
-    titulo?: string;
+    title?: string;
 
     @Prop({ type: Number, default: 0 })
     points?: number;
