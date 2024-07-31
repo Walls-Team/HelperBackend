@@ -5,7 +5,7 @@ export type CustomerDocument = HydratedDocument<Customer>;
 
 @Schema()
 export class Customer extends Document {
-    @Prop({ required: false, maxlength: 200 })
+    @Prop({ required: false, maxlength: 200 , unique : true })
     businessName: string;
 
     @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Area' }] })

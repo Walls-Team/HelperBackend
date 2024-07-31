@@ -37,11 +37,14 @@ export class AccountController {
       return globalResponseApi(res, null, 'Unauthorized', 401);
     }
 
+    createAccountDto.user = user;
+
     let account = await this.accountService.findAll(user);
     if (account) {
       return globalResponseApi(res, null, 'You already have an account', 400);
     }
-    return this.accountService.create(createAccountDto);
+    const newAccount = await this.accountService.create(createAccountDto);
+    return globalResponseApi(res, newAccount, 'Account created successfully', 201);
   }
 
   @Get()

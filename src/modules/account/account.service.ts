@@ -15,12 +15,13 @@ export class AccountService {
     private accountModel: Model<AccountDocument>,
   ) {}
 
-  create(createAccountDto: CreateAccountDto) {
+  async create(createAccountDto: CreateAccountDto) {
     const createdAccount = new this.accountModel(createAccountDto);
-    return createdAccount.save();
+    await createdAccount.save();
+    return createdAccount;
   }
 
-  findAll(user : string) : Promise<AccountDocument> {
+  findAll(user : string) : Promise<any> {
     return this.accountModel
       .findOne(
         {user},
@@ -35,6 +36,14 @@ export class AccountService {
         },
       )
       .populate('user', 'name email')
+      .populate({
+        path: 'customer',
+        select: '_id businessName',
+      })
+      .populate({
+        path: 'helper',
+        select: '_id',
+      })
       .exec();
   }
 

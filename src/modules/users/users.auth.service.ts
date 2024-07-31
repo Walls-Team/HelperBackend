@@ -44,16 +44,20 @@ export class AuthService {
     };
   }
 
-  async refresh(authRefreshDto: AuthRefreshDto) {
+  async refresh(authRefreshDto: string) {
     let refreshTokenPublicKey = `-----BEGIN PUBLIC KEY-----\n${process.env.JWT_REFRESH_PUBLIC_KEY}\n-----END PUBLIC KEY-----\n`
-    let verifiedToken = this.jwtSvc.verify(authRefreshDto.refreshToken, {
+    let verifiedToken = this.jwtSvc.verify(authRefreshDto, {
       publicKey: refreshTokenPublicKey,
     });
     if (!verifiedToken) {
       throw new Error('Token inválido');
     }
     const {sub} = verifiedToken
-    return this.generateTokens({sub}); ;
+    let tokens = await this.generateTokens({ sub})
+    return  {
+      tokens,
+      sub
+    };
   }
 
   private async generateTokens(payload: any) {

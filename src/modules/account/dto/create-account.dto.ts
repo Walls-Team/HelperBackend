@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsString , Min , IsEmpty , IsOptional} from 'class-validator';
 export class CreateAccountDto {
   @IsString()
+  @IsOptional()
   @IsNotEmpty()
   user: string;
 

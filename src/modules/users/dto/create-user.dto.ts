@@ -33,7 +33,6 @@ export class verifiedEmaillDto {
   @IsNotEmpty()
   email: string;
 
-  @IsEmail()
   @IsString()
   @IsNotEmpty()
   code: string;

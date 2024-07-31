@@ -8,10 +8,10 @@ export class Account extends Document {
     @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true, unique: true })
     user: MongooseSchema.Types.ObjectId;
 
-    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Customer' , unique: true  })
+    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Customer' })
     customer: MongooseSchema.Types.ObjectId;
 
-    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Helper' , unique: true })
+    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Helper'})
     helper: MongooseSchema.Types.ObjectId;
 
     @Prop({ required: true })

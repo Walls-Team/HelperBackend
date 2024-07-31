@@ -17,7 +17,6 @@ export class AuthGuard implements CanActivate {
     try {
       const request = context.switchToHttp().getRequest();
       let cookies = request.cookies;
-
       if(cookies && cookies.hct){
           const payload = this.jwtService.verify(cookies.hct);
           if(!payload){
