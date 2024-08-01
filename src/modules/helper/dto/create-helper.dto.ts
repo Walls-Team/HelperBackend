@@ -3,7 +3,7 @@ import {
   IsNumber,
   IsArray,
   IsOptional,
-  IsNotEmpty
+  IsNotEmpty,
 } from 'class-validator';
 
 export class CreateHelperDto {
@@ -39,23 +39,27 @@ export class CreateHelperDto {
   @IsOptional()
   longitude?: number;
 
-  @IsNumber()
+  @IsArray()
   @IsOptional()
-  altitude?: number;
+  localtion: [number, number];
 
-  @IsNumber()
-  @IsOptional()
-  precision?: number;
+  // @IsNumber()
+  // @IsOptional()
+  // altitude?: number;
 
-  @IsNumber()
-  @IsOptional()
-  altitudePrecision?: number;
+  // @IsNumber()
+  // @IsOptional()
+  // precision?: number;
 
-  @IsNumber()
-  @IsOptional()
-  header?: number;
+  // @IsNumber()
+  // @IsOptional()
+  // altitudePrecision?: number;
 
-  @IsNumber()
-  @IsOptional()
-  speed?: number;
+  // @IsNumber()
+  // @IsOptional()
+  // header?: number;
+
+  // @IsNumber()
+  // @IsOptional()
+  // speed?: number;
 }

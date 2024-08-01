@@ -16,9 +16,31 @@ export class ClientService {
   ) {}
 
   async create(createClientDto: CreateClientDto): Promise<CustomerDocument> {
-    const createdClient = new this.customerModel(createClientDto);
+    let payload = { ...createClientDto };
+    if (createClientDto.latitude && createClientDto.longitude) {
+      payload['location'] = {
+        type: 'Point',
+        coordinates: [createClientDto.longitude, createClientDto.latitude],
+      };
+    }
+    const createdClient = new this.customerModel(payload);
     const newClient = await createdClient.save();
-    return newClient;
+
+    const client = await this.customerModel.findById(newClient.id, {
+      active: 0,
+      date: 0,
+      latitude: 0,
+      longitude: 0,
+      altitude: 0,
+      precision: 0,
+      altitudePrecision: 0,
+      header: 0,
+      creationDate: 0,
+      updateDate: 0,
+      __v: 0,
+    });
+
+    return client;
   }
 
   async findAll(filters = {}): Promise<CustomerDocument[]> {
@@ -26,14 +48,15 @@ export class ClientService {
       .find(filters, {
         active: 0,
         date: 0,
-        latitude :0,
-        longitude :0,
-        altitude :0,
-        precision :0,
-        altitudePrecision :0,
-        header :0,
+        latitude: 0,
+        longitude: 0,
+        altitude: 0,
+        precision: 0,
+        altitudePrecision: 0,
+        header: 0,
         creationDate: 0,
         updateDate: 0,
+        location: 0,
         __v: 0,
       })
       .populate({
@@ -55,9 +78,7 @@ export class ClientService {
   async findOne(id: string): Promise<CustomerDocument> {
     const client: CustomerDocument = await this.customerModel
       .findById(id)
-      .select(
-        'id businessName',
-      )
+      .select('id businessName')
       .populate({
         path: 'areas',
         select: 'name',
@@ -78,11 +99,17 @@ export class ClientService {
     id: string,
     updateClientDto: UpdateClientDto,
   ): Promise<CustomerDocument> {
+    let payload = { ...updateClientDto };
+    if (updateClientDto.latitude && updateClientDto.longitude) {
+      payload['location '] = {
+        type: 'Point',
+        coordinates: [updateClientDto.longitude, updateClientDto.latitude],
+      };
+    }
+
     const updatedClient: CustomerDocument = await this.customerModel
       .findByIdAndUpdate(id, updateClientDto, { new: true })
-      .select(
-        'id businessName',
-      )
+      .select('id businessName')
       .populate({
         path: 'areas',
         select: 'name',

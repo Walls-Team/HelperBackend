@@ -24,23 +24,23 @@ export class CreateClientDto {
   @IsOptional()
   longitude: number;
 
-  @IsNumber()
-  @IsOptional()
-  altitude: number;
+  // @IsNumber()
+  // @IsOptional()
+  // altitude: number;
 
-  @IsNumber()
-  @IsOptional()
-  precision: number;
+  // @IsNumber()
+  // @IsOptional()
+  // precision: number;
 
-  @IsNumber()
-  @IsOptional()
-  altitudePrecision: number;
+  // @IsNumber()
+  // @IsOptional()
+  // altitudePrecision: number;
 
-  @IsNumber()
-  @IsOptional()
-  header: number;
+  // @IsNumber()
+  // @IsOptional()
+  // header: number;
 
-  @IsNumber()
-  @IsOptional()
-  speed: number;
+  // @IsNumber()
+  // @IsOptional()
+  // speed: number;
 }

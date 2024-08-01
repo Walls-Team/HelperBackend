@@ -53,7 +53,7 @@ export class HelperController {
     }
 
     const helper = await this.helperService.create(createHelperDto);
-    await this.accountService.update(account.id, {helper: helper.id});
+    await this.accountService.update(account.id, { helper: helper.id });
     return globalResponseApi(res, helper, 'Helper created successfully', 201);
   }
 
@@ -71,15 +71,10 @@ export class HelperController {
     }
 
     if (!account.helper) {
-      return globalResponseApi(
-        res,
-        null,
-        'You not have a helper account',
-        400,
-      );
+      return globalResponseApi(res, null, 'You not have a helper account', 400);
     }
 
-    const helper = await this.helperService.findMe(account.helper?._id);  
+    const helper = await this.helperService.findMe(account.helper?._id);
     if (!helper) {
       return globalResponseApi(res, null, 'Helper not found', 404);
     }
@@ -105,15 +100,10 @@ export class HelperController {
     }
 
     if (!account.helper) {
-      return globalResponseApi(
-        res,
-        null,
-        'You not have a helper account',
-        400,
-      );
+      return globalResponseApi(res, null, 'You not have a helper account', 400);
     }
 
-    if(id !== account.helper._id.toString()){
+    if (id !== account.helper._id.toString()) {
       return globalResponseApi(res, null, 'Unauthorized', 401);
     }
 
@@ -145,17 +135,12 @@ export class HelperController {
       return globalResponseApi(res, null, 'You do not have an account', 400);
     }
 
-    if(id !== account.helper._id.toString()){
+    if (id !== account.helper._id.toString()) {
       return globalResponseApi(res, null, 'Unauthorized', 401);
     }
 
     if (!account.helper) {
-      return globalResponseApi(
-        res,
-        null,
-        'You not have a helper account',
-        400,
-      );
+      return globalResponseApi(res, null, 'You not have a helper account', 400);
     }
 
     const isDelete = await this.helperService.remove(account.helper._id);

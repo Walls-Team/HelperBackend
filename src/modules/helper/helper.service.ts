@@ -16,8 +16,15 @@ export class HelperService {
   ) {}
 
   async create(createHelperDto: CreateHelperDto): Promise<HelperDocument> {
-    const createdHelper = new this.helperModel(createHelperDto);
+    let newPayload = { ...createHelperDto};
+    newPayload['location'] = {
+      type: 'Point',
+      coordinates: [-72.25843380701279, 7.809855217128565],
+    };
+    console.log(newPayload);
+    const createdHelper = new this.helperModel(newPayload);
     let newHelper = await createdHelper.save();
+
     const helper = await this.helperModel
       .findOne({ _id: newHelper._id })
       .select(['bio', 'title', 'points', 'profileComplete'])
