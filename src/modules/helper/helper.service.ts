@@ -16,12 +16,14 @@ export class HelperService {
   ) {}
 
   async create(createHelperDto: CreateHelperDto): Promise<HelperDocument> {
-    let newPayload = { ...createHelperDto};
-    newPayload['location'] = {
-      type: 'Point',
-      coordinates: [-72.25843380701279, 7.809855217128565],
-    };
-    console.log(newPayload);
+    let newPayload = { ...createHelperDto };
+    if (createHelperDto.latitude && createHelperDto.longitude) {
+      newPayload['location'] = {
+        type: 'Point',
+        coordinates: [createHelperDto.longitude, createHelperDto.latitude],
+      };
+    }
+
     const createdHelper = new this.helperModel(newPayload);
     let newHelper = await createdHelper.save();
 
@@ -48,8 +50,17 @@ export class HelperService {
     id: string,
     updateHelperDto: UpdateHelperDto,
   ): Promise<HelperDocument> {
+    let payload = { ...updateHelperDto };
+
+    if (updateHelperDto.latitude && updateHelperDto.longitude) {
+      payload['location'] = {
+        type: 'Point',
+        coordinates: [updateHelperDto.longitude, updateHelperDto.latitude],
+      };
+    }
+
     const updatedHelper = await this.helperModel
-      .findOneAndUpdate({ _id: id }, updateHelperDto, { new: true })
+      .findOneAndUpdate({ _id: id }, payload, { new: true })
       .select(['bio', 'title', 'points', 'profileComplete'])
       .populate('areas', '_id name')
       .populate('jobs', '_id name')

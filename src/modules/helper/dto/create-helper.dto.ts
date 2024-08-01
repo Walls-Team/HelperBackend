@@ -39,9 +39,9 @@ export class CreateHelperDto {
   @IsOptional()
   longitude?: number;
 
-  @IsArray()
-  @IsOptional()
-  localtion: [number, number];
+  // @IsArray()
+  // @IsOptional()
+  // localtion: [number, number];
 
   // @IsNumber()
   // @IsOptional()

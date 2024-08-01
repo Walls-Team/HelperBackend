@@ -25,7 +25,7 @@ export class Helper extends Document {
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Specialtie' }] })
   specials?: string[];
 
-  @Prop({ type: Object, required: true })
+  @Prop({ type: Object, required: false })
   location: {
     type: String;
     enum: ['Point'];
@@ -38,21 +38,6 @@ export class Helper extends Document {
   @Prop({ type: Number })
   longitude?: number;
 
-  // @Prop({ type: Number })
-  // altitude?: number;
-
-  // @Prop({ type: Number })
-  // precision?: number;
-
-  // @Prop({ type: Number })
-  // altitudePrecision?: number;
-
-  // @Prop({ type: Number })
-  // header?: number;
-
-  // @Prop({ type: Number })
-  // speed?: number;
-
   @Prop({ type: Date, default: Date.now })
   creationDate?: Date;
 
@@ -64,3 +49,18 @@ export class Helper extends Document {
 }
 
 export const HelperSchema = SchemaFactory.createForClass(Helper);
+
+// @Prop({ type: Number })
+// altitude?: number;
+
+// @Prop({ type: Number })
+// precision?: number;
+
+// @Prop({ type: Number })
+// altitudePrecision?: number;
+
+// @Prop({ type: Number })
+// header?: number;
+
+// @Prop({ type: Number })
+// speed?: number;

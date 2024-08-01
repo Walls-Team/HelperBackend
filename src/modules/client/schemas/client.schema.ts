@@ -17,7 +17,7 @@ export class Customer extends Document {
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Specialtie' }] })
   specials: string[];
 
-  @Prop({ type: Object, required: true })
+  @Prop({ type: Object, required: false })
   location: {
     type: String;
     enum: ['Point'];
