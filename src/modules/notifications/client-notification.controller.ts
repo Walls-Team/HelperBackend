@@ -154,16 +154,18 @@ export class ClientNotificationController {
       return globalResponseApi(res, null, 'No notifications found', 400);
     } else {
       notifications.forEach(async (notification) => {
-        if (!notification.isRead) {
+        if (notification.isRead === false) {
           try {
             let helperNotification =
               await this.helperNotificationService.findOne(
                 notification.helperNotification.toString(),
-                notification.helper.toString(),
+                notification.helper?._id.toString(),
               );
             helperNotification.clientsRead += 1;
             await helperNotification.save();
-          } catch (e) {}
+          } catch (e) {
+            console.log(e);
+          }
         }
         notification.isRead = true;
         await notification.save();

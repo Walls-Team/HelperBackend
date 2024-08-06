@@ -25,7 +25,7 @@ export class SearcClientService {
     }
 
     if (accountHelper) {
-      filters['_id'] = { $ne: accountHelper._id };
+      filters['_id'] = { $ne: accountCustomer._id };
     }
 
     if (query.distanceRange) {

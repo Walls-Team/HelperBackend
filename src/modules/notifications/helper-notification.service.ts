@@ -57,6 +57,11 @@ export class HelperNotificationService {
     id: string,
     owner: string,
   ): Promise<HelperNotificationDocument> {
+
+    console.log('id', id);
+    console.log('owner', owner);
+
+
     let notification = await this.model
       .findOne({ _id: id })
       .select([

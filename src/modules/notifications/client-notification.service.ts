@@ -24,12 +24,12 @@ export class ClientNotificationService {
     return createdNotification.save();
   }
 
-  async findAll(customer: string): Promise<ClientNotificationDocument[]> {
+  async findAll(customer: string): Promise<any[]> {
     return this.clientNotificationModel
       .find({
         customer: customer,
       })
-      .select(['title', 'message', 'isRead', 'customer'])
+      .select(['title', 'message', 'isRead', 'customer','helperNotification'])
       .populate('areas', 'name')
       .populate('jobs', 'name')
       .populate('specials', 'name')
