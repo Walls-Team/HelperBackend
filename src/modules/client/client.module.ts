@@ -4,6 +4,8 @@ import { ClientController } from './client.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import {Customer , CustomerSchema} from "src/modules/client/schemas/client.schema"
 import { AccountService } from '../account/account.service';
+import {CustomerSearchService} from 'src/modules/client/client.search.service'
+import {ClientSearchController} from "src/modules/client/client.search.controller"
 import { Account , AccountSchema } from '../account/schemas/account.schema';
 
 @Module({
@@ -17,7 +19,7 @@ import { Account , AccountSchema } from '../account/schemas/account.schema';
       'HelperMongo',
     ),
   ],
-  controllers: [ClientController],
-  providers: [ClientService , AccountService],
+  controllers: [ClientController , ClientSearchController],
+  providers: [ClientService , AccountService , CustomerSearchService],
 })
 export class ClientModule {}

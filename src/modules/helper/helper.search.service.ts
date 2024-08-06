@@ -13,20 +13,13 @@ export class HelperSearchService {
     private helperModel: Model<HelperDocument>,
   ) {}
 
-  async search(): Promise<HelperDocument[]> {
+  async search(filters: any): Promise<HelperDocument[]> {
     return this.helperModel
-      .find({
-        location: {
-          $near: {
-            $geometry: {
-              type: 'Point',
-              coordinates: [-72.25361691745873, 7.8119384874218385],
-            },
-            $minDistance: 100,
-            $maxDistance: 1500,
-          },
-        },
-      })
+      .find(filters)
+      .select(['bio', 'title', 'points', 'profileComplete'])
+      .populate('areas', '_id name')
+      .populate('jobs', '_id name')
+      .populate('specials', '_id name')
       .exec();
   }
 }

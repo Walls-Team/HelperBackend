@@ -17,6 +17,7 @@ import { UsersModule } from './modules/users/users.module';
 import { AccountModule } from './modules/account/account.module';
 import { ClientModule } from './modules/client/client.module';
 import { HelperModule } from './modules/helper/helper.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { HelperModule } from './modules/helper/helper.module';
     AccountModule,
     ClientModule,
     HelperModule,
+    NotificationsModule,
   ],
   controllers: [],
   providers: [

@@ -47,6 +47,32 @@ export class AccountService {
       .exec();
   }
 
+  findMeAccount(user : string) : Promise<any> {
+    return this.accountModel
+      .findOne(
+        {user},
+        {
+          id: 1,
+          user: 1,
+          customer: 1,
+          helper: 1,
+          country: 1,
+          state: 1,
+          city: 1,
+        },
+      )
+      .populate('user', 'name email')
+      .populate({
+        path: 'customer',
+        select: '_id businessName location',
+      })
+      .populate({
+        path: 'helper',
+        select: '_id title location',
+      })
+      .exec();
+  }
+
 
   update(id: string, updateAccountDto: UpdateAccountDto) {
     return this.accountModel.findByIdAndUpdate(id, updateAccountDto, { new: true })

@@ -9,13 +9,17 @@ import {
   Res,
   UseGuards,
   Put,
+  ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { HelperService } from './helper.service';
 import { globalResponseApi } from 'src/utils/response';
-import {HelperSearchService} from "src/modules/helper/helper.search.service"
+import { HelperSearchService } from 'src/modules/helper/helper.search.service';
 import { AccountService } from 'src/modules/account/account.service';
 import { AuthGuard } from 'src/auth.guard';
 import { Request, Response } from 'express';
+import { QueryHelperDto } from 'src/modules/helper/dto/query.helper.dto';
+import {SearcHelperService} from "src/modules/helper/utils/helperSearch";
 
 @Controller('helper')
 export class HelperSearchController {
@@ -24,18 +28,39 @@ export class HelperSearchController {
     private readonly accountService: AccountService,
   ) {}
 
-  @Get('search')
+  @Post('search')
   async search(
-    @Req() req: Request, 
-    @Res() res: Response
+    @Req() req: Request,
+    @Res() res: Response,
+    @Body() queryHelperDto: QueryHelperDto,
   ) {
-        let filters = {
-            radio: req.query.radio ? req.query.radio : 500,
-        }
-
-        console.log('filters', filters);  
-        let response = await this.helperService.search();
-        console.log('response', response);
-        return globalResponseApi(res, response, 'Search Helper', 200)   ;
+    /* 
+      Search User
+    */
+    const user = req.cookies.scu;
+    if (!user) {
+      return globalResponseApi(res, null, 'Unauthorized', 401);
     }
+
+    let account = await this.accountService.findMeAccount(user);
+    if (!account) {
+      return globalResponseApi(res, null, 'You do not have an account', 400);
+    }
+
+    if (!account.helper && !account.customer) {
+      return globalResponseApi(
+        res,
+        null,
+        'You not have Helper account and Customer account',
+        400,
+      );
+    }
+    let {statuSearch , err, filters} = SearcHelperService.search(account, queryHelperDto);
+    if(!statuSearch){
+      return globalResponseApi(res, null, err, 400);
+    }
+
+    let response = await this.helperService.search(filters);
+    return globalResponseApi(res, response, 'Search Helper', 200);
+  }
 }
