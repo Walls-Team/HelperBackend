@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import {
-
-ClientNotificationDocument,
-} from 'src/modules/notifications/schema/index';
-import {ClientNotificationDto} from "src/modules/notifications/dto/clientNotification.dto";
-
+import { ClientNotificationDocument } from 'src/modules/notifications/schema/index';
+import { ClientNotificationDto } from 'src/modules/notifications/dto/clientNotification.dto';
 
 @Injectable()
 export class ClientNotificationService {
@@ -15,25 +15,76 @@ export class ClientNotificationService {
     private readonly clientNotificationModel: Model<ClientNotificationDocument>,
   ) {}
 
-  async create(clientNotificationDto: ClientNotificationDto): Promise<ClientNotificationDocument> {
-    const createdNotification = new this.clientNotificationModel(clientNotificationDto);
+  async create(
+    clientNotificationDto: ClientNotificationDto,
+  ): Promise<ClientNotificationDocument> {
+    const createdNotification = new this.clientNotificationModel(
+      clientNotificationDto,
+    );
     return createdNotification.save();
   }
 
-  async findAll(): Promise<ClientNotificationDocument[]> {
-    return this.clientNotificationModel.find().exec();
+  async findAll(customer: string): Promise<ClientNotificationDocument[]> {
+    return this.clientNotificationModel
+      .find({
+        customer: customer,
+      })
+      .select(['title', 'message', 'isRead', 'customer'])
+      .populate('areas', 'name')
+      .populate('jobs', 'name')
+      .populate('specials', 'name')
+      .populate('helper', 'id title')
+      .sort({ creationDate: -1 })
+      .exec();
   }
 
-  async findOne(id: string): Promise<ClientNotificationDocument> {
-    return this.clientNotificationModel.findById(id).exec();
+  async findOne(
+    id: string,
+    customer: string,
+  ): Promise<ClientNotificationDocument> {
+    let notification = await this.clientNotificationModel
+      .findById(id)
+      .select(['title', 'message', 'isRead', 'customer'])
+      .populate('areas', 'name')
+      .populate('jobs', 'name')
+      .populate('specials', 'name')
+      .populate('helper', 'id title')
+      .exec();
+    if (!notification) {
+      throw new NotFoundException('Notification not found');
+    }
+
+    if (notification.customer.toString() !== customer) {
+      throw new ForbiddenException(
+        'You do not have permission to access this notification',
+      );
+    }
+
+    return notification;
   }
 
-  async update(id: string, clientNotificationDto: ClientNotificationDto): Promise<ClientNotificationDocument> {
-    return this.clientNotificationModel.findByIdAndUpdate(id, clientNotificationDto, { new: true }).exec();
+  async update(
+    id: string,
+    clientNotificationDto: ClientNotificationDto,
+  ): Promise<ClientNotificationDocument> {
+    return this.clientNotificationModel
+      .findByIdAndUpdate(id, clientNotificationDto, { new: true })
+      .exec();
   }
 
-  async remove(id: string): Promise<string> {
+  async remove(id: string, customer: string): Promise<string> {
+    let notification = await this.clientNotificationModel.findById(id).exec();
+    if (!notification) {
+      throw new NotFoundException('Notification not found');
+    }
+
+    if (notification.customer.toString() !== customer) {
+      throw new ForbiddenException(
+        'You do not have permission to access this notification',
+      );
+    }
+
     await this.clientNotificationModel.findByIdAndDelete(id).exec();
-    return "Eliminado";
+    return 'Notification deleted successfully';
   }
 }
