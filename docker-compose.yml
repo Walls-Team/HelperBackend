@@ -27,7 +27,7 @@ services:
     volumes:
       - helper-data:/data/db
     ports:
-      - "3001:27017"
+      - "27017:27017"
 
 volumes:
   helper-data:

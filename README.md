@@ -18,7 +18,19 @@ Este comando buscará el archivo `docker-compose.yml` en el directorio actual y 
 docker-compose up
 ```
 
-Esto iniciará los contenedores de Docker y ejecutará tu aplicación.
+Esto iniciará los contenedores de Docker tu base de datos y 
+
+```
+npm install
+```
+para descargar las dependencias 
+
+```
+npm run start:dev 
+```
+Para ejecutar en Modo desarrollo
+
+
 
 Recuerda que debes tener los archivos `Dockerfile` y `docker-compose.yml` correctamente configurados en tu proyecto para que este proceso funcione correctamente.
 
