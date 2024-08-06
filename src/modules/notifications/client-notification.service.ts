@@ -15,6 +15,11 @@ export class ClientNotificationService {
     private readonly clientNotificationModel: Model<ClientNotificationDocument>,
   ) {}
 
+  async create(clientNotificationDto: ClientNotificationDto): Promise<ClientNotificationDocument> {
+    const createdNotification = new this.clientNotificationModel(clientNotificationDto);
+    return createdNotification.save();
+  }
+
   async findAll(): Promise<ClientNotificationDocument[]> {
     return this.clientNotificationModel.find().exec();
   }

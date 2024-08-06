@@ -18,6 +18,10 @@ export class ClientNotificationDto {
 
   @IsNotEmpty()
   @IsMongoId()
+  customer: string;
+
+  @IsNotEmpty()
+  @IsMongoId()
   helper: string;
 
   @IsNotEmpty()

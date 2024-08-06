@@ -7,8 +7,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema, HydratedDocument } from 'mongoose';
 
-export type ClientNotificationDocument =
-  HydratedDocument<ClientNotification>;
+export type ClientNotificationDocument = HydratedDocument<ClientNotification>;
 
 @Schema()
 export class ClientNotification extends Document {
@@ -17,6 +16,13 @@ export class ClientNotification extends Document {
 
   @Prop({ required: true })
   message: string;
+
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Customer',
+    required: true,
+  })
+  customer: MongooseSchema.Types.ObjectId;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Helper', required: true })
   helper: MongooseSchema.Types.ObjectId;
@@ -50,6 +56,5 @@ export class ClientNotification extends Document {
   active: boolean;
 }
 
-export const ClientNotificationSchema = SchemaFactory.createForClass(
-  ClientNotification,
-);
+export const ClientNotificationSchema =
+  SchemaFactory.createForClass(ClientNotification);

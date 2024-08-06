@@ -17,6 +17,7 @@ export class HelperNotificationDto {
 
 
   @IsString()
+  @IsOptional()
   @IsNotEmpty()
   owner: string;
 

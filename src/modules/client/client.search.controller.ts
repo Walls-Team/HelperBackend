@@ -18,7 +18,7 @@ import { AccountService } from 'src/modules/account/account.service';
 import { AuthGuard } from 'src/auth.guard';
 import { Request, Response } from 'express';
 import { QueryClientDto } from 'src/modules/client/dto/search.dto';
-
+import {SearcClientService} from 'src/modules/client/utils/clientSearch';
 @Controller('client')
 export class ClientSearchController {
   constructor(
@@ -54,89 +54,10 @@ export class ClientSearchController {
         400,
       );
     }
-
-    /* 
-        Obtener informacion del Cliente
-      */
-    let accountHelper = account.helper;
-    let accountCustomer = account.customer;
-    let searchCoordinates = [];
-
-    if (accountHelper) {
-      if (accountHelper.location.coordinates.length === 0) {
-        if (accountCustomer.location.coordinates.length != 0) {
-          searchCoordinates = accountCustomer.location.coordinates;
-        }
-      } else {
-        searchCoordinates = accountHelper.location.coordinates;
-      }
-    } else {
-      if (accountCustomer.location.coordinates.length != 0) {
-        searchCoordinates = accountCustomer.location;
-      }
+    let {statuSearch, err , filters} = SearcClientService.search(account, queryCustomerDto);
+    if (!statuSearch) {
+      return globalResponseApi(res, null, err, 400);
     }
-
-    let filters = {};
-    if (accountHelper) {
-      filters['_id'] = { $ne: accountHelper._id };
-    }
-
-    if (queryCustomerDto.distanceRange) {
-      /* 
-          Busqueda por rango de distancia
-        */
-      filters['location'] = {
-        $near: {
-          $geometry: searchCoordinates,
-          $minDistance: 0,
-          $maxDistance: queryCustomerDto.distanceRange,
-        },
-      };
-    }
-
-    if (queryCustomerDto.minDistance && queryCustomerDto.maxDistance) {
-      if (queryCustomerDto.minDistance >= queryCustomerDto.maxDistance) {
-        return globalResponseApi(
-          res,
-          [],
-          'The minimum distance cannot be greater than or equal to the maximum distance',
-          400,
-        );
-      }
-      filters['location'] = {
-        $near: {
-          $geometry: searchCoordinates,
-          $minDistance: queryCustomerDto.minDistance,
-          $maxDistance: queryCustomerDto.maxDistance,
-        },
-      };
-    }
-
-    if (Object.keys(filters).length === 0) {
-      /* 
-          Por default si no hay filtros buscar siempre a 500 metros
-        */
-      filters['location'] = {
-        $near: {
-          $geometry: searchCoordinates,
-          $minDistance: 0,
-          $maxDistance: 500,
-        },
-      };
-    }
-
-    if (queryCustomerDto.areas && queryCustomerDto.areas.length > 0) {
-      filters['areas'] = { $in: queryCustomerDto.areas };
-    }
-
-    if (queryCustomerDto.jobs && queryCustomerDto.jobs.length > 0) {
-      filters['jobs'] = { $in: queryCustomerDto.jobs };
-    }
-
-    if (queryCustomerDto.specials && queryCustomerDto.specials.length > 0) {
-      filters['specials'] = { $in: queryCustomerDto.specials };
-    }
-
     let response = await this.clientSearchService.search(filters);
     return globalResponseApi(res, response, 'Search Helper', 200);
   }
