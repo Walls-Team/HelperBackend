@@ -1,21 +1,22 @@
-import { Controller, Get, Res, Param , Query , UseGuards} from '@nestjs/common';
+import { Controller, Get, Res, Param, Query, UseGuards } from '@nestjs/common';
 import { JobService } from './job.service';
 import { globalResponseApi } from 'src/utils/response';
 import { query, Response } from 'express';
-import {AuthGuard} from 'src/auth.guard'
+import { AuthGuard } from 'src/auth.guard';
 
 @Controller('job')
 export class JobController {
-  constructor(
-    private readonly jobService: JobService
-  ) {}
+  constructor(private readonly jobService: JobService) {}
 
   @Get()
   @UseGuards(AuthGuard)
-  async findAll(@Res() res: Response , @Query() query) {
+  async findAll(
+    @Res() res: Response,
+    @Query('area') area : string,
+    @Query('search') search: string,
+  ) {
     try {
-
-      const jobs = await this.jobService.findAll(query);
+      const jobs = await this.jobService.findAll(area , search);
       return globalResponseApi(res, jobs);
     } catch (err) {
       return globalResponseApi(res, null, err.message, 500);

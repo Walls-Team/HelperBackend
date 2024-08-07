@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Res , Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Res, Query, UseGuards } from '@nestjs/common';
 import { SpecialtieService } from './specialties.service';
 import { globalResponseApi } from 'src/utils/response';
 import { Response } from 'express';
@@ -10,25 +10,29 @@ export class SpecialtieController {
 
   @Get()
   @UseGuards(AuthGuard)
-  async findAll(@Res() res: Response, @Query() query) {
-    try{
-      const specialties = await this.specialtiesService.findAll(query);
+  async findAll(
+    @Res() res: Response,
+    @Query('area') area,
+    @Query('search') search: string,
+  ) {
+    try {
+      const specialties = await this.specialtiesService.findAll(area, search);
       return globalResponseApi(res, specialties);
-    }catch(err){
+    } catch (err) {
       return globalResponseApi(res, null, err.message, 500);
     }
   }
 
   @Get(':id')
   @UseGuards(AuthGuard)
-  async findOne(@Res() res: Response,@Param('id') id: string) {
-    try{
+  async findOne(@Res() res: Response, @Param('id') id: string) {
+    try {
       const specialty = await this.specialtiesService.findOne(id);
-      if(!specialty){
+      if (!specialty) {
         return globalResponseApi(res, null, 'Specialty not found', 404);
       }
       return globalResponseApi(res, specialty);
-    }catch(err){
+    } catch (err) {
       return globalResponseApi(res, null, err.message, 500);
     }
   }

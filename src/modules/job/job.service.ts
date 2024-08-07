@@ -11,7 +11,15 @@ export class JobService {
     private readonly jobModel: Model<Job>,
   ) {}
 
-  findAll(query) {
+  findAll(area : string , search: string = "") {
+    let query = {}
+    if(search && search.length > 0){
+      query['name'] = { $regex: search, $options: 'i' };
+    }
+
+    if(area && area.length > 0){
+      query['area'] = area;
+    }
     return this.jobModel.find(query, { id: 1, name: 1, description: 1 }).exec();
   }
 

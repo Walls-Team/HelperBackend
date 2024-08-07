@@ -17,8 +17,18 @@ export class SpecialtieService {
     });
   }
 
-  findAll(query) {
-    return this.specialModel.find(query, { id: 1, name: 1, description: 1 }).exec();
+  findAll(area: string = '', search: string = '') {
+    let query = {};
+    if (search && search.length > 0) {
+      query['name'] = { $regex: search, $options: 'i' };
+    }
+
+    if (area && area.length > 0) {
+      query['area'] = area;
+    }
+    return this.specialModel
+      .find(query, { id: 1, name: 1, description: 1 })
+      .exec();
   }
 
   findOne(id: string) {

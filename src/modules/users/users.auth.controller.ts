@@ -80,10 +80,10 @@ export class AuthController {
 
   @Get('logout')
   @UseGuards(AuthGuard)
-  async logout(@Res({ passthrough: true }) res) {
+  async logout(@Res() res) {
     res.clearCookie('hct');
     res.clearCookie('rct');
     res.clearCookie('scu');
-    return { message: 'Sesión cerrada' };
+    return globalResponseApi(res, null, '¡Session Cerrada!', 200);
   }
 }
